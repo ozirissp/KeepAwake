@@ -39,12 +39,43 @@ namespace KeepAwake
 
             trayIcon.ContextMenuStrip = trayMenu;
 
-            // Ajouter un CheckedListBox pour les titres de fenêtres
+            // Elements d'interface
+            var infoLabel = new Label
+            {
+                Text = "Sélectionnez les fenêtres à surveiller :",
+                Dock = DockStyle.Top,
+                Padding = new Padding(10),
+                Font = new Font(Font.FontFamily, 10, FontStyle.Bold)
+            };
+
             checkedListBox = new CheckedListBox
             {
                 Dock = DockStyle.Fill
             };
+
+            var buttonPanel = new FlowLayoutPanel
+            {
+                FlowDirection = FlowDirection.RightToLeft,
+                Dock = DockStyle.Bottom,
+                Padding = new Padding(10)
+            };
+
+            var closeButton = new Button { Text = "Fermer" };
+            closeButton.Click += (s, e) => this.Hide();
+
+            var saveButton = new Button { Text = "Enregistrer" };
+            saveButton.Click += (s, e) => SaveWindowStates();
+
+            var refreshButton = new Button { Text = "Actualiser" };
+            refreshButton.Click += (s, e) => windowManager.FillWindowTitles(checkedListBox);
+
+            buttonPanel.Controls.Add(closeButton);
+            buttonPanel.Controls.Add(saveButton);
+            buttonPanel.Controls.Add(refreshButton);
+
+            this.Controls.Add(infoLabel);
             this.Controls.Add(checkedListBox);
+            this.Controls.Add(buttonPanel);
 
             // Chemin du fichier de sauvegarde
             saveFilePath = Path.Combine(Application.StartupPath, "windowStates.xml");
