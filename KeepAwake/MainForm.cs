@@ -67,6 +67,10 @@ namespace KeepAwake
 
         private void OnExit(object? sender, EventArgs e)
         {
+            // Dispose tray icon before exiting the application
+            trayIcon.Visible = false;
+            trayIcon.Dispose();
+
             Application.Exit();
         }
 
@@ -85,8 +89,13 @@ namespace KeepAwake
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            base.OnFormClosing(e);
+            // Save state and dispose of the tray icon before the form closes
             SaveWindowStates();
+
+            trayIcon.Visible = false;
+            trayIcon.Dispose();
+
+            base.OnFormClosing(e);
         }
 
         private void SaveWindowStates()
